@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>对象的扩展功能</title>
+</head>
+<body>
+    <script>
+        // 1. es6 直接写入变量和函数，作为对象的属性和方法
+        const age = 12
+        const name = "darius"
+        let me = {
+            age,
+            name,
+            sayHello() {
+                console.log("hello", this.name);
+            }
+        }
+        me.sayHello()
+
+        function fn(x, y) {
+            return {x, y}
+        }
+        
+        // 对象简写
+        let car = {
+            wheel: 4,
+            setWheel(newVal) {
+                if (newVal < 4) {
+                    throw new Error("轮子不能小于4个")
+                }
+                this.wheel = newVal
+            },
+            get() {
+                return this.wheel
+            }
+        }
+        car.setWheel(4)
+        // 报错： car.setWheel(3)
+
+        // -----------2. 对象的方法
+        // 2.1 is 等价于 ===
+        // NaN比较特殊，只能用is才能相等。 大部分情况下都用 ===
+        console.log(NaN === NaN);
+        console.log(Object.is(NaN, NaN));
+        if (1 === 1) {
+            
+        }
+
+        // 2.2 assign 对象的浅拷贝
+
+        // 对象的合并, 返回合并之后的新对象
+        // Object.assign(target, obj1, obj2, obj3)
+        // 例子：
+        let target = {}
+        Object.assign(target, {a: 1, b: 2}, {c: "dd"})
+        console.log(target);
+
+        
+
+
+
+
+
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数组的扩展方法</title>
+</head>
+<body>
+    <script>
+        // 1. 扩展运算符
+        /* 含义 § ⇧
+        扩展运算符（spread）是三个点（...）。它好比 rest 参数的逆运算，将一个数组转为用逗号分隔的参数序列。
+        */
+        console.log(...[1, 2, 3])
+        // 1 2 3
+
+        console.log(1, ...[2, 3, 4], 5)
+        // 1 2 3 4 5
+
+        let divs = [...document.querySelectorAll('div')];
+        // [<div>, <div>, <div>]
+        
+        /* 替代函数的 apply() 方法
+        由于扩展运算符可以展开数组，所以不再需要apply()方法将数组转为函数的参数了。 */
+        // ES5 的写法
+        function f(x, y, z) {
+         // ...
+        }
+        var args = [0, 1, 2];
+        f.apply(null, args);
+
+
+        // ES6 的写法
+        function f(x, y, z) {
+        // ...
+        }
+        let args2 = [0, 1, 2];
+        f(...args2);
+        
+        // 另一个例子是通过push()函数，将一个数组添加到另一个数组的尾部。
+        // ES5 的写法
+        var arr1 = [0, 1, 2];
+        var arr2 = [3, 4, 5];
+        Array.prototype.push.apply(arr1, arr2);
+
+        // ES6 的写法
+        let arr11 = [0, 1, 2];
+        let arr22 = [3, 4, 5];
+        arr11.push(12); // 添加单个元素
+        arr11.push(...arr2); // 添加一组数据
+        console.log(arr11);
+
+        // ----------------2. Array.from()
+       // Array.from()方法用于将两类对象转为真正的数组：类似数组的对象（array-like object）和可遍历（iterable）的对象（包括 ES6 新增的数据结构 Set 和 Map）。
+       let arrayLike = {
+            '0': 'a',
+            '1': 'b',
+            '2': 'c',
+            length: 3
+        };
+        // ES5 的写法
+        var arr111 = [].slice.call(arrayLike); // ['a', 'b', 'c']
+        // ES6 的写法
+        let arr222 = Array.from(arrayLike); // ['a', 'b', 'c']
+        // 实际应用中，常见的类似数组的对象是 DOM 操作返回的 NodeList 集合，以及函数内部的arguments对象。Array.from()都可以将它们转为真正的数组。
+        // NodeList 对象
+        let ps = document.querySelectorAll('p');
+        Array.from(ps).filter(p => {
+            return p.textContent.length > 100;
+        });
+
+        // arguments 对象
+        function foo() {
+            var args = Array.from(arguments);
+            // ...
+        }
+
+        // -------------------3. Array.of() § ⇧
+        // Array.of()方法用于将一组值，转换为数组。
+        Array.of(3, 11, 8) // [3,11,8]
+        Array.of(3) // [3]
+        Array.of(3).length // 1
+
+        // Array.of()基本上可以用来替代Array()或new Array()，并且不存在由于参数不同而导致的重载。它的行为非常统一。
+        Array.of() // []
+        Array.of(undefined) // [undefined]
+        Array.of(1) // [1]
+        Array.of(1, 2) // [1, 2]
+        // Array.of()总是返回参数值组成的数组。如果没有参数，就返回一个空数组。
+
+
+        // ---------------4. 实例方法：copyWithin() §
+        /* 数组实例的copyWithin()方法，在当前数组内部，将指定位置的成员复制到其他位置（会覆盖原有成员），然后返回当前数组。也就是说，使用这个方法，会修改当前数组。 */
+        /* 它接受三个参数。
+
+        target（必需）：从该位置开始替换数据。如果为负值，表示倒数。
+        start（可选）：从该位置开始读取数据，默认为 0。如果为负值，表示从末尾开始计算。
+        end（可选）：到该位置前停止读取数据，默认等于数组长度。如果为负值，表示从末尾开始计算。
+        这三个参数都应该是数值，如果不是，会自动转为数值。 */
+
+
+
+        //  5. 遍历器, entries, keys, values
+        for (const key of [1, 2, 3].keys) {
+            
+        }
+        for (const val of [1, 2, 3].values) {
+            
+        }
+
+        for (const [idx, ele]  of [1, 2, 3].entries) {
+            
+        }
+        // 6. includes 返回一个布尔值，表示某个数组是否包括给定的值
+        if ([2, 3, 4].includes(3)) {
+
+        }
+
+        // -----------------7. 实例方法：flat()，flatMap()
+        /* 数组的成员有时还是数组，Array.prototype.flat()用于将嵌套的数组“拉平”，变成一维的数组。该方法返回一个新数组，对原数据没有影响。 */
+        [1, 2, [3, 4]].flat()
+        // [1, 2, 3, 4]
+        // 上面代码中，原数组的成员里面有一个数组，flat()方法将子数组的成员取出来，添加在原来的位置
+
+        /* flatMap()方法对原数组的每个成员执行一个函数（相当于执行Array.prototype.map()），然后对返回值组成的数组执行flat()方法。该方法返回一个新数组，不改变原数组。 */
+        // 相当于 [[2, 4], [3, 6], [4, 8]].flat()
+        [2, 3, 4].flatMap((x) => [x, x * 2])
+        // [2, 4, 3, 6, 4, 8]
+
+        // flatMap()只能展开一层数组
+
+        // -----------------------8.实例方法：at()
+        /* 长久以来，JavaScript 不支持数组的负索引，如果要引用数组的最后一个成员，不能写成arr[-1]，只能使用arr[arr.length - 1] */
+        /* 为了解决这个问题，ES2022 为数组实例增加了at()方法，接受一个整数作为参数，返回对应位置的成员，并支持负索引。
+        这个方法不仅可用于数组，也可用于字符串和类型数组（TypedArray）。 */
+        const arr99 = [5, 12, 8, 130, 44];
+        arr99.at(2) // 8
+        arr99.at(-2) // 130
+        // 如果参数位置超出了数组范围，at()返回undefined。
+
+        // -----------------9.实例方法：toReversed()，toSorted()，toSpliced()，with() §
+
+        // -----------------10. 实例方法：group()，groupToMap() §
+
+        
+
+
+
+    </script>
+</body>
+</html>

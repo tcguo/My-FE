@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>迭代器</title>
+  </head>
+  <body>
+    <script>
+      const items = ['one', 'two', 'thress'];
+      const ite = items[Symbol.iterator]();
+      // while (ite.next()) {
+      console.log(ite.next());
+      // }
+
+      // 生成器函数
+      // 1. 在function之后，在函数名之前加上*
+      // 2. 只能在函数内部使用yeild，让函数挂起
+      function* funcc() {
+        console.log('1-step');
+        yield 2;
+        console.log('2-step');
+        yield 3;
+      }
+
+      // 返回一个遍历器对象，可以调用next()
+      let fn = funcc();
+      console.log(fn.next());
+      console.log(fn.next());
+
+      // 总结：generator函数是分段执行的，yield语句是暂停执行，next是恢复执行
+
+      // 使用场景：
+      // 1. 为不具备interator接口的对象提供了遍历的操作
+      function* objectEntries() {
+        const propKeys = Object.keys(obj);
+        for (const propKey of propKeys) {
+          yield [propKey, obj[propKey]];
+        }
+      }
+      const obj = {
+        name: '小马哥',
+        age: 19,
+      };
+      obj[Symbol.iterator] = objectEntries; // 给对象装上迭代器
+
+      for (const [key, val] of objectEntries(obj)) {
+        console.log(`${key}, ${val}`);
+      }
+
+      // 2. 主要是将异步的操作同步化
+    </script>
+  </body>
+</html>

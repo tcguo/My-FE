@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.js"></script>
+</head>
+<body>
+    <script>
+        // Promise相当于一个容器，保存着未来才回结束的事件（异步操作）的一个结果
+        // 特点： 
+        // 一、对象的状态不受外部影响， 3个状态： 1. pending进行中 2. resolved成功 3.rejected失败
+        // 二、一旦状态改变，就不会改变， 任何时候都可以得到这个结果
+
+        function request() {
+          let pro = new Promise((resolve, reject) => {
+            // 里面执行异步操作
+            let res = {
+                code: 201,
+                data: {
+                    name: "小马哥"
+                },
+                msg: "an error"
+            }
+            setTimeout(() => {
+                if (res.code == 200) {
+                    resolve(res.data)
+                } else {
+                    reject(res.msg)
+                }
+                
+            }, 1000);
+          })
+          return pro
+        }
+        
+        // 链式调用
+        request().then((val) => {
+            console.log("val=", val);
+        }, (err) => {
+            console.log("err=", err);
+        });
+        // then: 第一个参数成功的回调， 第二个参数失败的回调
+
+
+        // Demo: 封装一个异步请求
+        let getWeather = function(url) {
+            return new Promise((resolve, reject) => {
+               let ajaxR = $.ajax({
+                    url,
+                    method: 'GET',
+                    dataType: 'json',
+                    cache: false,
+                    //data:  {} 传参数
+                });
+                ajaxR.done(function(result) {
+                    resolve(result)
+                })
+                ajaxR.fail((jqXHR, textStatus) => {
+                    reject(textStatus)
+                })
+            });
+        }
+
+        const url1 = "https://geoapi.qweather.com/v2/city/top?number=5&range=cn&key=56f5b22121d143f9b7de12cd044f7192";
+        getWeather(url1).then((result) => {
+            console.log("weather success = ", result);
+            return result.topCityList
+        }, (err) => {
+            console.log("weather error = ", err);
+        }).then((citys) => { 
+            // 可以继续then，以来上一步的return
+            console.log("topCityList ", citys);
+        }).catch(err => {
+
+        });
+
+        // -------Promise的其他方法
+        let promise1 = Promise.resolve('foo')
+        console.log(promise1);
+        promise1.then(data => {
+            console.log("promise1 data =", data);
+        });
+
+        // ---------all方法
+        let promise2 = new Promise((resolve, reject) => {   
+            // 异步方法
+        });
+        let promise3 = new Promise((resolve, reject) => {   
+            // 异步方法
+        });
+        //  并行执行所有的请求，所有成功才成功，一个失败则失败
+        let promise4 = Promise.all([promise2, promise3]);
+
+        // -----race方法：给某个异步请求设置超时时间，并在超时空后执行相应的操作
+
+        
+
+    </script>
+    
+</body>
+</html>

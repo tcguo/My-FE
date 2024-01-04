@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Symbol</title>
+  </head>
+  <body>
+    <script>
+      // es6, Symbol原始的数据类型，表示独一无二的值
+      // 相对而言用的不是特别多，最大用途：定义对象的私有变量
+      const name1 = Symbol('name');
+      const name2 = Symbol('name');
+      console.log(name1 == name2); // false
+
+      const num1 = Symbol(1);
+      const num2 = Symbol(2);
+      console.log('num1 == num2 ? = ', num1 === num2); // false
+
+      let obj = {};
+      obj[name1] = '小马哥';
+      // 或者
+      obj = {
+        [name1]: '小马哥', // 必须用[]
+      };
+      //如何获取这个值, 注意：通过用symbol定义的对象中变量， 取值时候一定要用中括号[]
+      console.log(obj[name1]);
+
+      // 如何获取通过symbol声明的属性名，（作为对象的key）
+      // 1. 通过Object的getOwnPropertySymbols方法
+      let symbols = Object.getOwnPropertySymbols(obj);
+      console.log(symbols[0]);
+      console.log(obj[symbols[0]]);
+
+      // 通过反射来
+      let obj3 = Reflect.ownKeys(obj);
+      console.log(obj3[0]);
+    </script>
+  </body>
+</html>

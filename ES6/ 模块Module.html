@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模块化Module</title>
+</head>
+<body>
+    <script type= 'module'>
+        // 导入和导出的name必须保持一致
+        // crypto可以任意命名
+
+        import crypto, { MyName, ssayName } from './modules/index.js'
+        console.log('myname = ', MyName);
+        console.log('sayname = ', ssayName());
+        console.log("crypto =", crypto);
+        let aa1 = crypto.md5("aa");
+        let bb1 = crypto.base64("bb");
+        console.log("aa = ", aa1);
+        console.log("bb = ", bb1); 
+
+        console.log('-----------------');
+        // 第二种方式导入，全部导入并起个新的名字
+        import * as crypto1 from './modules/index.js'
+        console.log("crypto.default is ", crypto1.default);
+
+        console.log('myname = ', crypto1.MyName);
+        console.log('sayname = ', crypto1.ssayName());
+
+        console.log("crypto1 =", crypto1);
+        let aa = crypto1.default.md5("aa");
+        let bb = crypto1.default.base64("bb");
+        console.log("aa = ", aa);
+        console.log("bb = ", bb); 
+
+
+
+    </script>
+</body>
+</html>
